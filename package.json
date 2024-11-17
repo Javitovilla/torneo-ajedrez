@@ -1,0 +1,15 @@
+{
+  "name": "ajedrez",
+  "version": "1.0.0",
+  "description": "Este proyecto es un sistema para gestionar un torneo de ajedrez. Permite registrar jugadores, árbitros, rondas y resultados.",
+  "main": "setup.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongodb": "^6.10.0"
+  }
+}
