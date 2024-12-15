@@ -83,3 +83,51 @@ Ejemplo de Documento en Rondas:
     ]
 }
 
+## 1. Requerimientos No Funcionales
+
+### 1.1. Escenario para el Particionamiento
+
+En el contexto del torneo de ajedrez, se anticipa que la base de datos contendrá un gran volumen de información relacionada con los jugadores, árbitros, rondas y resultados. A medida que el torneo crece en popularidad, se espera que la cantidad de jugadores supere los 10,000, lo que generará una carga significativa en la base de datos.
+
+Para garantizar un rendimiento óptimo y una respuesta rápida a las consultas, se requiere la implementación de sharding (particionamiento horizontal). Este enfoque permitirá distribuir los datos entre múltiples servidores (shards), lo que mejorará la escalabilidad y la disponibilidad del sistema.
+
+### 1.2. Criterios de Calidad
+
+- **Desempeño**: 
+  - La base de datos debe ser capaz de manejar al menos 1000 consultas por segundo durante las horas pico del torneo.
+  - Las operaciones de lectura deben completarse en menos de 50 ms y las operaciones de escritura en menos de 100 ms.
+
+- **Escalabilidad**:
+  - El sistema debe permitir la adición de nuevos shards sin interrupciones en el servicio.
+  - Se debe poder aumentar la capacidad del sistema conforme crezca el número de jugadores y partidas.
+
+- **Disponibilidad**:
+  - El sistema debe estar disponible 24/7, con un tiempo de inactividad mínimo.
+  - En caso de fallo en uno o más shards, el sistema debe seguir funcionando sin pérdida de datos.
+
+- **Mantenibilidad**:
+  - La arquitectura debe ser fácil de mantener y actualizar.
+  - Se deben proporcionar herramientas para monitorear el rendimiento del sistema y realizar ajustes según sea necesario.
+mongosh --port 27019
+rs.initiate({
+    _id: "configReplSet",
+    members: [
+        { _id: 0, host: "localhost:27019" }
+    ]
+});
+mongod --shardsvr --replSet shardReplSet1 --dbpath C:\data\shard1 --port 27020
+mongod --shardsvr --replSet shardReplSet2 --dbpath C:\data\shard2 --port 27021
+mongosh --port 27020
+rs.initiate({
+    _id: "shardReplSet1",
+    members: [
+        { _id: 0, host: "localhost:27020" }
+    ]
+});
+mongosh --port 27021
+rs.initiate({
+    _id: "shardReplSet2",
+    members: [
+        { _id: 0, host: "localhost:27021" }
+    ]
+});
