@@ -44,3 +44,14 @@ async function run() {
 }
 
 run().catch(console.dir);
+sh.addShard("shardReplSet1/localhost:27020");
+sh.addShard("shardReplSet2/localhost:27021");
+use torneo_ajedrez;
+sh.enableSharding("torneo_ajedrez");
+db.createCollection("jugadores");
+db.jugadores.createIndex({ nombre: 1 });
+sh.shardCollection("torneo_ajedrez.jugadores", { nombre: 1 });
+
+for (let i = 0; i < 100; i++) {
+    db.jugadores.insertOne({ nombre: "Jugador_" + i, ranking: Math.floor(Math.random() * 2000), pais: "Pais_" + (i % 5) });
+}
