@@ -131,3 +131,11 @@ rs.initiate({
         { _id: 0, host: "localhost:27021" }
     ]
 });
+sh.enableSharding("torneo_ajedrez");
+
+db.jugadores.createIndex({ jugador_id: 1 });
+
+for (let i = 0; i < 100; i++) {
+    db.jugadores.insertOne({ jugador_id: i, nombre: "Jugador_" + i });
+}
+sh.status();
